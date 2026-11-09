@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dumish Blooms · Flores de limpiapipas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500;1,9..144,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fff8f3; --blush:#fde8f0; --pink:#e8609d; --pink-d:#c9407f;
+  --gold:#e3ae1f; --ink:#22161c; --muted:#7a6670; --night:#120b0f;
+  --r:28px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Outfit,system-ui,sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.serif{font-family:Fraunces,Georgia,serif}
+.wrap{width:min(1180px,92vw);margin:0 auto}
+
+/* NAV */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;height:56px;display:flex;align-items:center;
+  background:rgba(255,248,243,.72);backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px);
+  border-bottom:1px solid rgba(34,22,28,.06);transition:background .4s,color .4s,border-color .4s}
+.nav.dark{background:rgba(18,11,15,.6);color:#fff;border-color:rgba(255,255,255,.08)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav img{height:34px;width:auto}
+.nav.dark img{filter:brightness(1.15)}
+.nav ul{display:flex;gap:28px;list-style:none;font-size:14px;font-weight:400}
+.nav ul a{opacity:.8;transition:opacity .2s}.nav ul a:hover{opacity:1}
+.nav .pill{font-size:13px;font-weight:500;padding:7px 16px;border-radius:99px;background:var(--pink);color:#fff}
+@media(max-width:820px){.nav ul{display:none}}
+
+.btn{display:inline-flex;align-items:center;gap:8px;font-size:17px;font-weight:500;padding:13px 28px;border-radius:99px;transition:transform .2s,background .2s,color .2s;cursor:pointer;border:0}
+.btn:hover{transform:translateY(-1px)}
+.btn.solid{background:var(--pink);color:#fff}.btn.solid:hover{background:var(--pink-d)}
+.btn.ghost{border:1.5px solid var(--pink);color:var(--pink);background:transparent}
+.btn.ghost:hover{background:var(--pink);color:#fff}
+
+/* HERO */
+.hero{padding:120px 0 0;text-align:center;position:relative}
+.hero .logo{width:min(300px,62vw);margin:0 auto 6px}
+.hero h1{font-family:Fraunces,serif;font-weight:600;font-size:clamp(44px,7.4vw,96px);line-height:1;letter-spacing:-.02em}
+.hero h1 em{color:var(--pink);font-style:italic}
+.hero p.sub{font-size:clamp(19px,2.2vw,26px);color:var(--muted);margin:18px auto 30px;max-width:640px;font-weight:300}
+.hero .ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.hero-stage{height:170vh;position:relative;margin-top:50px}
+.hero-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-img{width:min(440px,80vw);aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;will-change:transform,width,border-radius;box-shadow:0 40px 80px -30px rgba(120,40,80,.35)}
+.hero-img img{width:100%;height:100%;object-fit:cover}
+.hero-caption{position:absolute;bottom:7vh;left:0;right:0;text-align:center;color:#fff;font-family:Fraunces,serif;font-size:clamp(28px,4vw,52px);font-weight:500;opacity:0;text-shadow:0 4px 30px rgba(0,0,0,.45);pointer-events:none}
+
+/* SCRUB sections (Apple-style) */
+.scrub{position:relative;background:var(--night);color:#fff}
+.scrub .sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.scrub .frame{position:relative;height:min(88vh,1000px);aspect-ratio:9/16;border-radius:34px;overflow:hidden;background:#000;box-shadow:0 0 0 1px rgba(255,255,255,.06),0 50px 120px -40px rgba(232,96,157,.45)}
+.scrub canvas{width:100%;height:100%;display:block}
+.scrub .loader{position:absolute;inset:auto 0 18px 0;text-align:center;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.5;transition:opacity .4s}
+.steps{position:absolute;inset:0;pointer-events:none}
+.step{position:absolute;top:50%;width:min(340px,28vw);transform:translateY(-40%);opacity:0;transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1)}
+.step.on{opacity:1;transform:translateY(-50%)}
+.scrub{--fw:min(49.5vh,562px)}
+.step{width:min(340px,calc(50% - var(--fw)/2 - 100px))}
+.step.l{right:calc(50% + var(--fw)/2 + 60px);text-align:right}
+.step.r{left:calc(50% + var(--fw)/2 + 60px)}
+.step .k{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:12px}
+.step h3{font-family:Fraunces,serif;font-size:clamp(32px,3.6vw,52px);line-height:1.05;font-weight:600}
+.step p{margin-top:14px;font-size:18px;line-height:1.5;color:rgba(255,255,255,.72);font-weight:300}
+.scrub-intro{text-align:center;padding:130px 0 40px}
+.scrub-intro .k{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.scrub-intro h2{font-family:Fraunces,serif;font-size:clamp(42px,6.4vw,84px);line-height:1.02;margin-top:14px;font-weight:600}
+.scrub-intro h2 em{color:var(--pink);font-style:italic}
+.scrub-intro p{color:rgba(255,255,255,.62);font-size:20px;margin-top:16px;font-weight:300}
+.progress{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);width:120px;height:3px;border-radius:3px;background:rgba(255,255,255,.15);overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--pink))}
+
+/* color picker for LOVE section */
+.colors{position:absolute;left:calc(50% + var(--fw)/2 + 60px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:16px}
+.colors div{display:flex;align-items:center;gap:14px;flex-direction:row-reverse;justify-content:flex-end;font-size:18px;opacity:.35;transition:opacity .35s,transform .35s;transform:translateX(-8px)}
+.colors div.on{opacity:1;transform:none}
+.colors span{width:18px;height:18px;border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.25)}
+.colors div.on span{box-shadow:0 0 0 3px #fff}
+.lovetitle{position:absolute;right:calc(50% + var(--fw)/2 + 60px);top:50%;transform:translateY(-50%);width:min(360px,calc(50% - var(--fw)/2 - 100px));text-align:right}
+.lovetitle h3{font-family:Fraunces,serif;font-size:clamp(34px,3.8vw,56px);line-height:1.04;font-weight:600}
+.lovetitle h3 b{display:block;font-style:italic;font-weight:600;transition:color .4s}
+.lovetitle p{margin-top:16px;color:rgba(255,255,255,.7);font-size:18px;line-height:1.5;font-weight:300}
+
+@media(max-width:820px){
+  .scrub .frame{height:100vh;height:100svh;width:100vw;aspect-ratio:auto;border-radius:0}
+  .step,.lovetitle{left:6vw!important;right:6vw!important;width:auto;top:auto;bottom:9vh;text-align:left!important;transform:translateY(20px)}
+  .step.on{transform:none}
+  .lovetitle{transform:none}
+  .steps::after,.scrub .sticky::after{content:"";position:absolute;inset:auto 0 0 0;height:55%;background:linear-gradient(transparent,rgba(0,0,0,.75));pointer-events:none}
+  .step,.lovetitle,.colors{z-index:2}
+  .step p{font-size:16px}
+  .colors{left:6vw;top:auto;bottom:calc(9vh + 150px);transform:none;flex-direction:row;gap:10px}
+  .colors div{font-size:0;gap:0;transform:none;flex-direction:row}
+  .colors span{width:22px;height:22px}
+  .lovetitle p{display:none}
+}
+
+/* SECTIONS */
+section.light{padding:130px 0}
+.head{text-align:center;max-width:760px;margin:0 auto 64px}
+.head .k{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);font-weight:600}
+.head h2{font-family:Fraunces,serif;font-size:clamp(40px,5.4vw,70px);line-height:1.04;font-weight:600;margin-top:12px;letter-spacing:-.01em}
+.head h2 em{font-style:italic;color:var(--pink)}
+.head p{color:var(--muted);font-size:20px;margin-top:16px;line-height:1.5;font-weight:300}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 1s,transform 1s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* collection */
+.coll{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}
+.card{position:relative;border-radius:var(--r);overflow:hidden;background:#fff;min-height:420px;isolation:isolate}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1);z-index:-1}
+.card:hover img{transform:scale(1.05)}
+.card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(25,8,16,.78));z-index:-1}
+.card .txt{position:absolute;left:28px;right:28px;bottom:26px;color:#fff}
+.card .tag{display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.2);backdrop-filter:blur(8px);padding:6px 12px;border-radius:99px;margin-bottom:12px}
+.card h3{font-family:Fraunces,serif;font-size:clamp(26px,2.6vw,36px);font-weight:600;line-height:1.08}
+.card p{margin-top:8px;font-size:16px;opacity:.85;font-weight:300;line-height:1.45;max-width:420px}
+.c-a{grid-column:span 7;min-height:620px}.c-b{grid-column:span 5;min-height:620px}
+.c-c{grid-column:span 4}.c-d{grid-column:span 4}.c-e{grid-column:span 4}
+.c-f{grid-column:span 6;min-height:520px}.c-g{grid-column:span 6;min-height:520px}
+@media(max-width:900px){.coll>*{grid-column:span 12!important;min-height:480px!important}}
+
+/* features */
+.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.feat{background:#fff;border-radius:24px;padding:34px 28px;box-shadow:0 1px 0 rgba(34,22,28,.04)}
+.feat .ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:var(--blush);margin-bottom:22px}
+.feat .ic svg{width:26px;height:26px;stroke:var(--pink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.feat h4{font-size:21px;font-weight:600;margin-bottom:8px}
+.feat p{color:var(--muted);line-height:1.5;font-size:16px}
+@media(max-width:900px){.feats{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.feats{grid-template-columns:1fr}}
+
+/* gallery (horizontal scroll driven by vertical) */
+.hgal{height:300vh;position:relative;background:var(--blush)}
+.hgal .sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.hgal .head{margin-bottom:44px}
+.track{display:flex;gap:22px;padding-left:max(4vw,calc(50% - 590px));will-change:transform}
+.track figure{flex:0 0 auto;height:min(58vh,560px);aspect-ratio:3/4;border-radius:24px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(120,40,80,.35)}
+.track figure img{width:100%;height:100%;object-fit:cover}
+.track figure.wide{aspect-ratio:4/3}
+
+/* video */
+.meet{background:var(--night);color:#fff;padding:140px 0}
+.meet .grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.meet .vbox{position:relative;justify-self:center;width:min(380px,86vw);aspect-ratio:9/16;border-radius:34px;overflow:hidden;box-shadow:0 50px 120px -40px rgba(232,96,157,.5)}
+.meet video{width:100%;height:100%;object-fit:cover;display:block;background:#000}
+.meet .play{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.18);cursor:pointer;border:0;transition:opacity .3s}
+.meet .play span{width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;transition:transform .2s}
+.meet .play:hover span{transform:scale(1.07)}
+.meet .play svg{width:28px;height:28px;margin-left:5px;fill:var(--pink)}
+.meet .play.hide{opacity:0;pointer-events:none}
+.meet .k{font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.meet h2{font-family:Fraunces,serif;font-size:clamp(40px,5vw,66px);line-height:1.04;font-weight:600;margin:14px 0 22px}
+.meet h2 em{color:var(--pink);font-style:italic}
+.meet p{color:rgba(255,255,255,.7);font-size:19px;line-height:1.6;font-weight:300;margin-bottom:16px}
+@media(max-width:900px){.meet .grid{grid-template-columns:1fr;gap:50px;text-align:center}}
+
+/* order */
+.stepsrow{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:s}
+.ostep{background:#fff;border-radius:24px;padding:40px 32px;position:relative}
+.ostep::before{counter-increment:s;content:counter(s);font-family:Fraunces,serif;font-style:italic;font-size:64px;line-height:1;color:var(--pink);display:block;margin-bottom:18px}
+.ostep h4{font-size:22px;font-weight:600;margin-bottom:10px}
+.ostep p{color:var(--muted);font-size:16px;line-height:1.55}
+@media(max-width:820px){.stepsrow{grid-template-columns:1fr}}
+.final{margin-top:90px;border-radius:36px;overflow:hidden;position:relative;min-height:520px;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;isolation:isolate}
+.final img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.final::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(30,8,18,.55),rgba(30,8,18,.78));z-index:-1}
+.final h2{font-family:Fraunces,serif;font-size:clamp(40px,5.6vw,76px);line-height:1.02;font-weight:600;padding:0 20px}
+.final h2 em{font-style:italic;color:#ffc4dd}
+.final p{font-size:20px;opacity:.85;margin:18px 0 32px;font-weight:300;padding:0 20px}
+.final .btn.ghost{border-color:#fff;color:#fff}.final .btn.ghost:hover{background:#fff;color:var(--pink)}
+
+footer{padding:60px 0 50px;text-align:center;color:var(--muted);font-size:14px}
+footer img{width:160px;margin:0 auto 18px}
+
+@media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top"><img src="img/logo.png" alt="Dumish Blooms"></a>
+    <ul>
+      <li><a href="#proceso">El proceso</a></li>
+      <li><a href="#catalogo">Catálogo</a></li>
+      <li><a href="#colores">Colores</a></li>
+      <li><a href="#conocenos">Conócenos</a></li>
+    </ul>
+    <a class="pill wa" href="#pedir">Pedir</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <img class="logo reveal" src="img/logo.png" alt="Dumish Blooms · Flores de limpiapipas">
+    <h1 class="reveal">Flores que <em>nunca</em><br>se marchitan.</h1>
+    <p class="sub reveal">Ramos hechos a mano, pétalo por pétalo, con limpiapipas. Para regalar hoy y guardar para siempre.</p>
+    <div class="ctas reveal">
+      <a class="btn solid" href="#catalogo">Ver catálogo</a>
+      <a class="btn ghost wa" href="#pedir">Pedir el mío</a>
+    </div>
+  </div>
+  <div class="hero-stage" id="heroStage">
+    <div class="hero-sticky">
+      <div class="hero-img" id="heroImg"><img src="img/9380.webp" alt="Ramo de girasoles y tulipanes rosados"></div>
+      <div class="hero-caption" id="heroCap">Hello, flores.</div>
+    </div>
+  </div>
+</header>
+
+<!-- SCRUB 1 : el ramo se revela -->
+<section class="scrub" id="proceso">
+  <div class="scrub-intro wrap">
+    <div class="k">El proceso</div>
+    <h2>Desliza y míralo <em>florecer</em>.</h2>
+    <p>Sigue bajando.</p>
+  </div>
+  <div class="scrub-track" data-seq="seq1" data-frames="134" data-fw="640" data-fh="1138" style="height:420vh">
+    <div class="sticky">
+      <div class="frame"><canvas></canvas><div class="loader">Cargando…</div></div>
+      <div class="steps">
+        <div class="step l" data-from="0.02" data-to="0.30"><div class="k">01 · A mano</div><h3>Pétalo por pétalo.</h3><p>Cada flor se forma a mano con limpiapipas. Nada de moldes, nada de plástico.</p></div>
+        <div class="step r" data-from="0.30" data-to="0.58"><div class="k">02 · Envoltura</div><h3>Envuelto con detalle.</h3><p>Papel coreano, encaje, listón y moño. Tú eliges los colores.</p></div>
+        <div class="step l" data-from="0.66" data-to="1.01"><div class="k">03 · La sorpresa</div><h3>Listo para enamorar.</h3><p>Girasoles, tulipanes y flores de nube. Un ramo que dura para siempre.</p></div>
+      </div>
+      <div class="progress"><i></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- CATALOGO -->
+<section class="light" id="catalogo">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="k">Lo que hacemos</div>
+      <h2>Un detalle para <em>cada</em> persona.</h2>
+      <p>Ramos, lirios, macetitas y arreglos temáticos. Todo personalizable: flores, colores, envoltura y tarjeta.</p>
+    </div>
+    <div class="coll">
+      <article class="card c-a reveal"><img src="img/9926.webp" alt="Ramo de girasoles y tulipanes con envoltura beige" loading="lazy"><div class="txt"><span class="tag">Favorito</span><h3>Ramos de girasoles y tulipanes</h3><p>El clásico de Dumish. Girasoles, tulipanes rosados y florecitas blancas, con papel periódico y moño.</p></div></article>
+      <article class="card c-b reveal"><img src="img/9921.webp" alt="Ramo de lirios rojos" loading="lazy"><div class="txt"><span class="tag">Elegante</span><h3>Lirios</h3><p>Lirios rojos de terciopelo con detalles blancos. Para aniversarios y fechas especiales.</p></div></article>
+      <article class="card c-c reveal"><img src="img/9929.webp" alt="Macetitas tejidas con flores de colores" loading="lazy"><div class="txt"><span class="tag">Mini</span><h3>Macetitas</h3><p>Flores pequeñas en canastitas. Perfectas para tu escritorio.</p></div></article>
+      <article class="card c-d reveal"><img src="img/9931.webp" alt="Ramo temático de tulipanes rojos en papel negro" loading="lazy"><div class="txt"><span class="tag">Temáticos</span><h3>Ramos con personalidad</h3><p>Inspirados en lo que más le gusta a esa persona.</p></div></article>
+      <article class="card c-e reveal"><img src="img/9923.webp" alt="Girasol y lirios en jarrón" loading="lazy"><div class="txt"><span class="tag">Decoración</span><h3>Flores en jarrón</h3><p>Dale vida a tu cuarto sin tener que regarlas.</p></div></article>
+      <article class="card c-f reveal"><img src="img/9927.webp" alt="Caja de lirios rojos" loading="lazy"><div class="txt"><span class="tag">Arreglos</span><h3>Cajas y arreglos grandes</h3><p>Para cuando un ramo no es suficiente.</p></div></article>
+      <article class="card c-g reveal"><img src="img/9925.webp" alt="Ramo con chocolates" loading="lazy"><div class="txt"><span class="tag">Extras</span><h3>Con chocolates y tarjeta</h3><p>Agrégale chocolates, una tarjeta con tu mensaje o un moño especial.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- SCRUB 2 : LOVE colores -->
+<section class="scrub" id="colores">
+  <div class="scrub-intro wrap">
+    <div class="k">Colores</div>
+    <h2>Del color que <em>tú</em> quieras.</h2>
+    <p>Baja para cambiar el lirio.</p>
+  </div>
+  <div class="scrub-track" data-seq="seq2" data-frames="107" data-fw="540" data-fh="960" data-fps="6" data-fit="contain" style="height:460vh">
+    <div class="sticky">
+      <div class="frame"><canvas></canvas><div class="loader">Cargando…</div></div>
+      <div class="lovetitle"><h3>Lirio<b id="colorName" style="color:#c9a7e8">lila</b></h3><p>Elige entre decenas de colores de limpiapipas. Si lo imaginas, lo hacemos.</p></div>
+      <div class="colors" id="colorList">
+        <div data-t="0" data-c="#c9a7e8" data-n="lila">Lila <span style="background:#c9a7e8"></span></div>
+        <div data-t="3.6" data-c="#c8102e" data-n="rojo">Rojo <span style="background:#c8102e"></span></div>
+        <div data-t="6.6" data-c="#ec4a8e" data-n="rosa">Rosa <span style="background:#ec4a8e"></span></div>
+        <div data-t="10.6" data-c="#f6d2e4" data-n="blanco y rosa">Blanco y rosa <span style="background:linear-gradient(135deg,#fff 50%,#f0a3c8 50%)"></span></div>
+        <div data-t="13.6" data-c="#f39a2e" data-n="naranja">Naranja <span style="background:#f39a2e"></span></div>
+      </div>
+      <div class="progress"><i></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- POR QUE -->
+<section class="light">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="k">¿Por qué limpiapipas?</div>
+      <h2>Bonitas hoy.<br><em>Bonitas</em> en diez años.</h2>
+    </div>
+    <div class="feats">
+      <div class="feat reveal"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h4>Duran para siempre</h4><p>No se marchitan ni pierden color. Un recuerdo que se queda.</p></div>
+      <div class="feat reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/><path d="M4 4l16 16"/></svg></div><h4>Sin agua ni cuidados</h4><p>No hay que regarlas ni cambiarlas. Solo disfrutarlas.</p></div>
+      <div class="feat reveal"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.3-9A5 5 0 0 1 12 6a5 5 0 0 1 9.3 6C19 16.5 12 21 12 21z"/></svg></div><h4>Hechas a mano</h4><p>Cada pieza es única, hecha con paciencia y mucho cariño.</p></div>
+      <div class="feat reveal"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2a10 10 0 0 0 0 20c1 0 1.6-.8 1.6-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.8-1.7 1.7-1.7H16a6 6 0 0 0 6-6C22 6 17.5 2 12 2z"/></svg></div><h4>100% personalizables</h4><p>Flores, colores, envoltura, tarjeta y extras a tu gusto.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIA horizontal -->
+<section class="hgal" id="galeria">
+  <div class="sticky">
+    <div class="head reveal" style="padding:0 4vw">
+      <div class="k">Galería</div>
+      <h2>Hechos para <em>regalar</em>.</h2>
+    </div>
+    <div class="track" id="track">
+      <figure><img src="img/9373.webp" alt="" loading="lazy"></figure>
+      <figure><img src="img/9922.webp" alt="" loading="lazy"></figure>
+      <figure><img src="img/9381.webp" alt="" loading="lazy"></figure>
+      <figure class="wide"><img src="img/9930.webp" alt="" loading="lazy"></figure>
+      <figure><img src="img/9932.webp" alt="" loading="lazy"></figure>
+      <figure><img src="img/9928.webp" alt="" loading="lazy"></figure>
+      <figure><img src="img/9376.webp" alt="" loading="lazy"></figure>
+      <figure><img src="img/9382.webp" alt="" loading="lazy"></figure>
+    </div>
+  </div>
+</section>
+
+<!-- CONOCENOS -->
+<section class="meet" id="conocenos">
+  <div class="wrap grid">
+    <div class="vbox reveal">
+      <video id="meetVid" src="vid/conocenos.mp4" poster="vid/poster.jpg" playsinline preload="metadata"></video>
+      <button class="play" id="playBtn" aria-label="Reproducir video"><span><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span></button>
+    </div>
+    <div class="reveal">
+      <div class="k">Conócenos</div>
+      <h2>Deja de regalar flores que <em>mueren</em>.</h2>
+      <p>En Dumish Blooms hacemos rosas, lirios, girasoles y ramos completos personalizados, todos con limpiapipas.</p>
+      <p>Son perfectos para un regalo especial o para darle vida a tu cuarto sin preocuparte por regarlas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PEDIR -->
+<section class="light" id="pedir">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="k">Cómo pedir</div>
+      <h2>Tu ramo en <em>tres</em> pasos.</h2>
+    </div>
+    <div class="stepsrow">
+      <div class="ostep reveal"><h4>Elige tu estilo</h4><p>Ramo, lirios, macetita o arreglo. Mándanos una foto de referencia si tienes una idea.</p></div>
+      <div class="ostep reveal"><h4>Personalízalo</h4><p>Escoge flores, colores, envoltura y si quieres tarjeta o chocolates.</p></div>
+      <div class="ostep reveal"><h4>Recíbelo</h4><p>Lo hacemos a mano para ti. Te avisamos cuando esté listo para entregar.</p></div>
+    </div>
+    <div class="final reveal">
+      <img src="img/9379.webp" alt="" loading="lazy">
+      <div>
+        <h2>Regala algo que <em>dure</em>.</h2>
+        <p>Escríbenos y armamos juntos tu ramo.</p>
+        <a class="btn solid wa" href="#pedir" id="waBtn">Escríbenos por WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <img src="img/logo.png" alt="Dumish Blooms">
+  <div>Flores de limpiapipas hechas a mano · Guatemala</div>
+</footer>
+
+<script>
+/* ====== CONFIGURA AQUÍ ======
+   Escribe el número de WhatsApp con código de país, sin + ni espacios. Ej: "50212345678" */
+const WHATSAPP = "50238702471";
+const WA_MSG = "¡Hola Dumish Blooms! 🌸 Quiero pedir un ramo.";
+/* ============================ */
+
+if (WHATSAPP) document.querySelectorAll('.wa').forEach(a => {
+  a.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(WA_MSG)}`;
+  a.target = "_blank"; a.rel = "noopener";
+});
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp = (v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const vh = () => window.innerHeight;
+
+/* Reveal on scroll */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }), {threshold:.15});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* progress of a tall section with a sticky child: 0 at top, 1 at bottom */
+function progressOf(el){
+  const r = el.getBoundingClientRect();
+  return clamp(-r.top / (r.height - vh()));
+}
+
+/* ===== Image-sequence scrubber (Apple style) ===== */
+class Scrubber{
+  constructor(track){
+    this.track = track;
+    this.seq = track.dataset.seq;
+    this.n = +track.dataset.frames;
+    this.fw = +track.dataset.fw; this.fh = +track.dataset.fh;
+    this.fps = +track.dataset.fps || 14;
+    this.fit = track.dataset.fit || 'cover';
+    this.canvas = track.querySelector('canvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.loader = track.querySelector('.loader');
+    this.bar = track.querySelector('.progress i');
+    this.steps = [...track.querySelectorAll('.step')];
+    this.sheets = []; this.loaded = 0;
+    this.nSheets = Math.ceil(this.n/10);
+    this.cur = -1; this.p = 0;
+    this.resize();
+  }
+  load(){
+    if (this.started) return; this.started = true;
+    for (let s=0; s<this.nSheets; s++){
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = () => { img.ok = true; this.loaded++; if (this.loaded===this.nSheets) this.loader.style.opacity=0; this.cur=-1; this.render(); };
+      img.src = `${this.seq}/s${String(s).padStart(2,'0')}.webp`;
+      this.sheets[s] = img;
+    }
+  }
+  resize(){
+    const r = this.canvas.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2);
+    this.canvas.width = Math.round(r.width*d); this.canvas.height = Math.round(r.height*d);
+    this.cur = -1;
+  }
+  frameAvailable(i){ const s=this.sheets[Math.floor(i/10)]; return s && s.ok; }
+  draw(i){
+    // fall back to nearest loaded frame
+    if (!this.frameAvailable(i)){
+      let best=-1; for (let k=0;k<this.n;k++){ if (this.frameAvailable(k) && (best<0 || Math.abs(k-i)<Math.abs(best-i))) best=k; }
+      if (best<0) return; i=best;
+    }
+    if (i===this.cur) return; this.cur=i;
+    const img = this.sheets[Math.floor(i/10)], sx=(i%10)*this.fw;
+    const cw=this.canvas.width, ch=this.canvas.height;
+    const sc = (this.fit==='contain'?Math.min:Math.max)(cw/this.fw, ch/this.fh), w=this.fw*sc, h=this.fh*sc;
+    this.ctx.fillStyle='#120b0f'; this.ctx.fillRect(0,0,cw,ch);
+    this.ctx.drawImage(img, sx, 0, this.fw, this.fh, (cw-w)/2, (ch-h)/2, w, h);
+  }
+  update(){
+    this.p = progressOf(this.track);
+    const r = this.track.getBoundingClientRect();
+    if (r.top < vh()*3 && r.bottom > -vh()) this.load();
+    this.render();
+  }
+  render(){
+    const i = Math.round(this.p*(this.n-1));
+    this.draw(i);
+    if (this.bar) this.bar.style.width = (this.p*100)+'%';
+    this.steps.forEach(s => s.classList.toggle('on', this.p>=+s.dataset.from && this.p<+s.dataset.to));
+    if (this.onFrame) this.onFrame(i/this.fps);
+  }
+}
+const scrubbers = [...document.querySelectorAll('.scrub-track')].map(t => new Scrubber(t));
+scrubbers[0].load();
+
+/* LOVE colors */
+const colorItems = [...document.querySelectorAll('#colorList div')], colorName = document.getElementById('colorName');
+scrubbers[1].onFrame = t => {
+  let on = colorItems[0];
+  colorItems.forEach(d => { if (t >= +d.dataset.t) on = d; });
+  colorItems.forEach(d => d.classList.toggle('on', d===on));
+  if (colorName.textContent !== on.dataset.n){ colorName.textContent = on.dataset.n; colorName.style.color = on.dataset.c; }
+};
+
+/* Hero image grows to full screen */
+const heroStage = document.getElementById('heroStage'), heroImg = document.getElementById('heroImg'), heroCap = document.getElementById('heroCap');
+function hero(){
+  if (reduce) return;
+  const p = progressOf(heroStage);
+  const e = 1 - Math.pow(1-clamp(p/0.75),3);
+  const base = Math.min(440, innerWidth*.8);
+  const w = base + (innerWidth - base)*e;
+  const h = base*4/3 + (vh() - base*4/3)*e;
+  heroImg.style.width = w+'px'; heroImg.style.height = h+'px'; heroImg.style.aspectRatio='auto';
+  heroImg.style.borderRadius = (28*(1-e))+'px';
+  heroCap.style.opacity = clamp((p-.55)/.25);
+  heroCap.style.transform = `translateY(${(1-clamp((p-.55)/.25))*30}px)`;
+}
+
+/* Horizontal gallery */
+const hgal = document.getElementById('galeria'), track = document.getElementById('track');
+function gallery(){
+  const p = progressOf(hgal);
+  const max = track.scrollWidth - innerWidth + Math.max(innerWidth*.04, (innerWidth-1180)/2);
+  track.style.transform = `translateX(${-p*Math.max(0,max)}px)`;
+}
+
+/* Nav goes dark over dark sections */
+const nav = document.getElementById('nav'), darks = [...document.querySelectorAll('.scrub, .meet')];
+function navTone(){
+  const dark = darks.some(s => { const r=s.getBoundingClientRect(); return r.top<=28 && r.bottom>=28; });
+  nav.classList.toggle('dark', dark);
+}
+
+let ticking=false;
+function frame(){ ticking=false; scrubbers.forEach(s=>s.update()); hero(); gallery(); navTone(); }
+addEventListener('scroll', ()=>{ if(!ticking){ ticking=true; requestAnimationFrame(frame);} }, {passive:true});
+addEventListener('resize', ()=>{ scrubbers.forEach(s=>s.resize()); frame(); });
+frame();
+
+/* Video */
+const v = document.getElementById('meetVid'), pb = document.getElementById('playBtn');
+pb.addEventListener('click', ()=>{ v.controls = true; v.play().catch(()=>{}); pb.classList.add('hide'); });
+v.addEventListener('pause', ()=>{ if (v.ended) pb.classList.remove('hide'); });
+</script>
+</body>
+</html>
